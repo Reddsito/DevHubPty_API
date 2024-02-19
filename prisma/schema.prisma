@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_PG")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  fullname      String
+  username      String @unique
+  email         String @unique
+  password      String
+  provider      Provider @default(CREDENTIALS)
+  verifyEmail   Boolean @default(false)
+  verifyToken   String? 
+  biography     String?
+  role          Role           @default(USER)
+  notifications Notification[]
+  followed      Follow[]       @relation("Followed")
+  followers     Follow[]       @relation("Follower")
+  archivedPosts ArchivedPost[]
+  recipient     Notification[] @relation("Recipient")
+  author        Notification[] @relation("Author")
+  Vote          Vote[]
+  CommentVote   CommentVote[]
+  Comment       Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+  postId String
+  replyToAuthor   Comment?  @relation("replyToAuthor", fields: [replyToAuthorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies   Comment[] @relation("replyToAuthor")
+  replyToAuthorId String?
+
+  votes CommentVote[]
+}
+
+model Vote {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  postId String
+
+  @@id([userId, postId])
+}
+
+model CommentVote {
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId String
+
+  @@id([userId, commentId])
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+}
+
+model Follow {
+  follower   User   @relation("Follower", fields: [followerId], references: [id])
+  followerId String
+  followed   User   @relation("Followed", fields: [followedId], references: [id])
+  followedId String
+
+  @@id([followerId, followedId])
+}
+
+model ArchivedPost {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  postId String
+
+  @@id([userId, postId])
+}
+
+model Notification {
+  id           String       @id @default(uuid())
+  recipient    User         @relation("Recipient", fields: [recipientId], references: [id])
+  recipientId  String
+  author       User         @relation("Author", fields: [authorId], references: [id])
+  authorId     String
+  activityType ActivityType
+  sourceId     String
+  parentId     String?
+  parentType   ParentType?
+  time         DateTime
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+}
+
+enum Provider {
+  CREDENTIALS
+  GOOGLE
+  GITHUB
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ActivityType {
+  LIKE
+  COMMENT
+}
+
+enum ParentType {
+  POST
+  COMMENT
+}

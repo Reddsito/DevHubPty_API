@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma-mongo/prisma/client"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL_MONGO")
+}
+
+model Post {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  authorId String
+  state Status @default(PUBLISH)
+  data Json
+}
+
+enum Status {
+  DRAFT
+  PUBLISH
+}
