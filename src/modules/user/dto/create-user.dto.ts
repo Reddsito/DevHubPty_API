@@ -1,5 +1,5 @@
 import { Provider } from "@prisma/client"
-import { IsBoolean, IsEmail, IsEnum, IsOptional, Matches, MaxLength, MinLength,  } from "class-validator"
+import { IsBoolean, IsEmail, IsEnum, IsOptional, IsString, Matches, MaxLength, MinLength,  } from "class-validator"
 
 
 
@@ -28,5 +28,9 @@ export class CreateUserDto {
   @IsBoolean()
   @IsOptional()
   verifyEmail?: boolean 
+
+  @IsString()
+  @IsOptional()
+  photo?: string
   
 }

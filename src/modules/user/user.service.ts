@@ -14,11 +14,10 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
 
-    const { email, username, password } = createUserDto;
 
     const existingEmail  = await this.userRepository.find({
       where: {
-        email
+        email: createUserDto.email
       }
     })    
 
@@ -26,7 +25,7 @@ export class UserService {
 
     const existingUsername  = await this.userRepository.find({
       where: {
-        username
+        username: createUserDto.username
       }
     })    
 
@@ -35,12 +34,12 @@ export class UserService {
     return this.userRepository.create({
       data: {
         ...createUserDto,
-        password: bcrypt.hashSync(password, 10)
+        password: createUserDto.password ? bcrypt.hashSync(createUserDto.password, 10) : null
       }
     });
   }
 
-  async findUser( where: Prisma.UserWhereInput  ) {
+  async find( where: Prisma.UserWhereUniqueInput  ) {
 
    return await this.userRepository.find({
       where
@@ -52,13 +51,15 @@ export class UserService {
 
     if ( id !== updateUserDto.id ) throw new ForbiddenException(`You don't have a permission to update another user's profile.`)
 
-    const { username, email } = updateUserDto
+    const { username = 'a', email ='a' } = updateUserDto
+
 
     const existingEmail  = await this.userRepository.find({
       where: {
-        email
+        email: email
       }
     })    
+
 
     if ( existingEmail  ) throw new BadRequestException('There is already a user with this email')
 
@@ -70,10 +71,24 @@ export class UserService {
 
     if ( existingUsername ) throw new BadRequestException('There is already a user with this username')
 
-    return this.userRepository.updateUser({
+    const user = await this.userRepository.updateUser({
       data: updateUserDto,
       id
     });
+
+    const { password, ...rest } = user
+
+    return {
+      ...rest    
+    }
+  }
+
+  async findBy(where: Prisma.UserWhereInput) {
+    
+    return await this.userRepository.findBy({
+      where
+    })
+    
   }
 
   async remove(paramId: string, userId: string) {
@@ -90,5 +105,15 @@ export class UserService {
     if ( !user ) throw new BadRequestException('There is not user with this id')
 
     return this.userRepository.deleteUser(paramId);
+  }
+
+  async getUser(id: string) {
+
+    const user = await this.find({ id })
+
+    if ( !user ) throw new BadRequestException(`A user with this id don't exist `)
+
+    return user;
+
   }
 }

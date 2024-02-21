@@ -13,13 +13,14 @@ datasource db {
 model User {
   id            String         @id @default(uuid())
   fullname      String
-  username      String @unique
-  email         String @unique
-  password      String
-  provider      Provider @default(CREDENTIALS)
-  verifyEmail   Boolean @default(false)
-  verifyToken   String? 
+  username      String         @unique
+  email         String         @unique
+  password      String?
+  provider      Provider       @default(CREDENTIALS)
+  verifyEmail   Boolean        @default(false)
+  verifyToken   String?
   biography     String?
+  photo         String?
   role          Role           @default(USER)
   notifications Notification[]
   followed      Follow[]       @relation("Followed")
@@ -33,14 +34,14 @@ model User {
 }
 
 model Comment {
-  id        String   @id @default(uuid())
-  text      String
-  createdAt DateTime
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String
-  postId String
+  id              String    @id @default(uuid())
+  text            String
+  createdAt       DateTime
+  author          User      @relation(fields: [authorId], references: [id])
+  authorId        String
+  postId          String
   replyToAuthor   Comment?  @relation("replyToAuthor", fields: [replyToAuthorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  replies   Comment[] @relation("replyToAuthor")
+  replies         Comment[] @relation("replyToAuthor")
   replyToAuthorId String?
 
   votes CommentVote[]

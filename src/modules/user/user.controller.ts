@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Auth } from '../auth/decorators/auth.decorator';
@@ -13,7 +13,7 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.findUser({id});
+    return this.userService.getUser(id);
   }
 
   @Patch(':id')
@@ -21,6 +21,8 @@ export class UserController {
     @Param('id', ParseUUIDPipe) id: string, 
     @Body() updateUserDto: UpdateUserDto, 
     @GetUser() user: User) {
+
+      console.log(user)
 
       updateUserDto.id = user.id
       return this.userService.update(id, updateUserDto);

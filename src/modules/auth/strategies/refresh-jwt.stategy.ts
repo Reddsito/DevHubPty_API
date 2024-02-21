@@ -3,7 +3,7 @@ import { ExtractJwt, Strategy } from "passport-jwt";
 import { ConfigService } from "@nestjs/config";
 import { Injectable } from "@nestjs/common";
 import { Request as RequestType } from "express";
-import { JwtPayload } from "../interfaces/JwtPayload";
+import { JwtPayload } from "../interfaces/JwtPayload.interface";
 
 export const REFRESH_TOKEN = 'REFRESH_TOKEN'
 

@@ -9,12 +9,14 @@ import { JwtStrategy } from './strategies/access_jwt.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-jwt.stategy';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { TypedEventEmitterModule } from 'src/event-mitter/event-emitter.module';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { GithubStrategy } from './strategies/github.strategy';
 
 
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, RefreshTokenStrategy],
+  providers: [AuthService, JwtStrategy, RefreshTokenStrategy, GoogleStrategy, GithubStrategy],
   imports: [
     PassportModule,
     JwtModule.register({}),

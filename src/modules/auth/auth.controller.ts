@@ -1,15 +1,19 @@
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { RefreshTokenGuard } from './guards/jwt_resfresh.guard';
 import { GetUser } from './decorators/get-user.decorator';
-import { Response as ResponseType } from 'express';
+import { Request as RequestType, Response as ResponseType } from 'express';
 import { RefreshPayload } from './interfaces/refreshPayload.interface';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { ForgotPasswordDto } from './dto/forgotPasword.dto';
 import { User } from '../user/entities/user.entity';
-import { ChangePasswordDto } from './dto/changePassword.dto';
+import { GoogleGuard } from './guards/google.guard';
+import { JwtAccessAuthGuard } from './guards/jwt_access.guard';
+import { GoogleUser } from './interfaces/googleUser.interace';
+import { GithubGuard } from './guards/github.guard';
+import { GithubUser } from './interfaces/githubUser.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +31,37 @@ export class AuthController {
     return this.authService.signUp(createUserDto, response);
   }
 
+  @Get('google')
+  @UseGuards(GoogleGuard)
+  googleLogin() {}
+
+  @Get('github')
+  @UseGuards(GithubGuard)
+  githubLogin() {}
+
+  @Get('google/callback')
+  @UseGuards(GoogleGuard)
+  googleLoginCallback(
+    @GetUser() user:  GoogleUser,
+    @Res() response: ResponseType,
+    @Req() request: RequestType
+  ) {
+    return this.authService.googleCallback(user, response, request)
+  }
+
+  @Get('github/callback')
+  @UseGuards(GithubGuard)
+  githubCallback(
+    @GetUser() user:  GithubUser,
+    @Res() response: ResponseType,
+    @Req() request: RequestType
+  ) {
+    return this.authService.githubCallback(user, response, request)
+  }
+
+
   @Get('logout')
+  @UseGuards(JwtAccessAuthGuard)
     async logout( @Res({ passthrough: true }) response: ResponseType  ) {
       return this.authService.logout(response)
     }
@@ -38,6 +72,7 @@ export class AuthController {
     }
 
   @Post('changePassword/:id')
+  @UseGuards(JwtAccessAuthGuard)
     async changePasswordPassword( 
       @Param('id', ParseUUIDPipe) id: string,
       @GetUser() user: User ) {

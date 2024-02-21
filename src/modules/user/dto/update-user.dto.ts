@@ -3,6 +3,7 @@ import { IsBoolean, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Mat
 
 export class UpdateUserDto  {
 
+  @IsOptional()
   @IsUUID()
   @IsString()
   id?: string
@@ -20,6 +21,10 @@ export class UpdateUserDto  {
   @IsOptional()
   @IsEmail()
   email?: string
+
+  @IsString()
+  @IsOptional()
+  photo?: string
 
   @IsOptional()
   @IsEnum(Provider)

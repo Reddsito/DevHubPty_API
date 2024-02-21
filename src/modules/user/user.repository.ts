@@ -20,6 +20,17 @@ export class UserRepository {
   }
 
   async find( params: {
+    where: Prisma.UserWhereUniqueInput
+  } ): Promise<User> {
+
+    const { where } = params
+
+    return await this.prisma.user.findUnique({
+      where
+    })
+  }
+
+  async findBy( params: {
     where: Prisma.UserWhereInput
   } ): Promise<User> {
 
@@ -29,6 +40,8 @@ export class UserRepository {
       where
     })
   }
+
+
 
   async findAll(){
     return await this.prisma.user.findMany()
