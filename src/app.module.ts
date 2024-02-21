@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { EmailModule } from './modules/email/email.module';
 import { ConfigVariables } from '@/configuration/configuration';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { ConfigVariables } from '@/configuration/configuration';
     AuthModule,
     SharedModule,
     EmailModule,
-    EventEmitterModule.forRoot()
+    EventEmitterModule.forRoot(),
+    PostModule
   ],
   controllers: [],
   providers: [],

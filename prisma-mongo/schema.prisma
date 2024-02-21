@@ -13,7 +13,7 @@ datasource db {
 
 model Post {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+  name String @unique
   authorId String
   state Status @default(PUBLISH)
   data Json

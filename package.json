@@ -25,6 +25,7 @@
     "pg:studio": "npx prisma studio",
     "mongo:studio": "npx prisma studio --schema prisma-mongo/schema.prisma",
     "mongo:generate": "npx prisma generate --schema prisma-mongo/schema.prisma",
+    "mongo:migrate": "npx prisma migrate dev --schema prisma-mongo/schema.prisma",
     "mongo:dbpush": "npx prisma db push --schema prisma-mongo/schema.prisma"
   },
   "dependencies": {
