@@ -1,6 +1,9 @@
 import { Status } from '@prisma-mongo/prisma/client';
 import { IsEnum, IsJSON, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 
+import { Transform, Type } from 'class-transformer';
+
+
 
 export class CreatePostDto {
 
@@ -14,10 +17,10 @@ export class CreatePostDto {
   authorId: string
 
   @IsEnum(Status)
-  state: Status
+  state?: Status
 
-  @IsJSON()
-  data: Object
-
+  @Type(() => Object)
+  @Transform(value => value, { toClassOnly: true })
+  data: Record<string, any>;
 
 }

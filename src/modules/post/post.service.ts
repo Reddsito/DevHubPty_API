@@ -1,26 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { ConfigService } from '@nestjs/config';
+import { PostRepository } from './post.repository';
+import { SearchParamsDto } from './dto/searchParam.dto';
 
 @Injectable()
 export class PostService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+
+  constructor(
+    private readonly postRepository: PostRepository
+  ){}
+
+  async create(createPostDto: CreatePostDto) {
+    return await this.postRepository.create({
+      data: {
+        ...createPostDto
+      }
+    });
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findAll( searchParams: SearchParamsDto) {
+    return await this.postRepository.findAll({
+      orderBy: { 
+        ...searchParams.orderBy
+       },
+      page: searchParams.page,
+      where: {
+        ...searchParams.where
+      }
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string) {
+    return this.postRepository.find({
+      where: {
+        id
+      } 
+    })
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: string, updatePostDto: UpdatePostDto) {
+    return this.postRepository.update({
+      data: {
+        ...updatePostDto
+      },
+      id
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string, user: string) {
+
+    if ( id !== user ) throw new ForbiddenException(`You don't have a permission to delete this user`)
+
+    return this.postRepository.delete({
+      id
+    });
   }
 }

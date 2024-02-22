@@ -1,6 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma } from '@prisma-mongo/prisma/client';
 import { PrismaMongoService } from "../shared/database/prisma-mongo.service";
+import { PaginateFunction, PaginatedResult, paginator } from "../shared/paginator";
+import { Post } from "./entities/post.entity";
+
+
+const paginate: PaginateFunction = paginator({ perPage: 10 });
 
 
 @Injectable()
@@ -41,21 +46,22 @@ export class PostRepository {
   }
 
   async findAll( params: {
-    where: Prisma.PostWhereInput
-    orderBy: Prisma.PostOrderByWithAggregationInput,
-    skip: number,
-    take: number,
-    cursor: Prisma.PostWhereUniqueInput
-    } ) 
+    where?: Prisma.PostWhereInput
+    orderBy?: Prisma.PostOrderByWithAggregationInput,
+    page?: number
+    } ): Promise<PaginatedResult<Post>> 
   {
-    const { where, cursor, orderBy, skip, take } = params
-    return await this.prisma.post.findMany({
-      where,
-      orderBy,
-      skip,
-      take,
-      cursor
-    })
+    const { where, orderBy, page } = params
+    return paginate(
+      this.prisma.post,
+      {
+        where,
+        orderBy,
+      },
+      {
+        page,
+      }
+    )
   }
 
   async update( params: {

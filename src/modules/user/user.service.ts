@@ -93,7 +93,7 @@ export class UserService {
 
   async remove(paramId: string, userId: string) {
 
-    if ( paramId !== userId ) throw new ForbiddenException(`You don't have a permission to update another user's profile.`)
+    if ( paramId !== userId ) throw new ForbiddenException(`You don't have a permission to delete this user.`)
 
 
     const user = await this.userRepository.find({
