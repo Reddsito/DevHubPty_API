@@ -7,6 +7,7 @@ export class Post {
   name: PostDB['name']
   authorId: PostDB['authorId']
   state : PostDB['state']
+  tags : PostDB['tags']
   data : PostDB['data']
 
 }

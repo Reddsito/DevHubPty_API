@@ -49,9 +49,10 @@ export class PostRepository {
     where?: Prisma.PostWhereInput
     orderBy?: Prisma.PostOrderByWithAggregationInput,
     page?: number
+    perPage?: number
     } ): Promise<PaginatedResult<Post>> 
   {
-    const { where, orderBy, page } = params
+    const { where, orderBy, page, perPage } = params
     return paginate(
       this.prisma.post,
       {
@@ -60,6 +61,7 @@ export class PostRepository {
       },
       {
         page,
+        perPage
       }
     )
   }

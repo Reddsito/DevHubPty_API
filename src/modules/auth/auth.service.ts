@@ -6,8 +6,8 @@ import { Provider } from '@prisma/client';
 import { ConfigService } from '@nestjs/config';
 import { Request as RequestType, Response as ResponseType } from 'express';
 
-import { UserService } from '../user/user.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserService } from '../users/user.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtPayload } from './interfaces/JwtPayload.interface';
 import { ACCESS_TOKEN } from './strategies/access_jwt.strategy';

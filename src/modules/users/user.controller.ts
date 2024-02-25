@@ -7,7 +7,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { User } from './entities/user.entity';
 
 @Auth(Role.USER)
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

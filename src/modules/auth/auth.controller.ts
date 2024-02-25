@@ -1,14 +1,14 @@
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { RefreshTokenGuard } from './guards/jwt_resfresh.guard';
 import { GetUser } from './decorators/get-user.decorator';
 import { Request as RequestType, Response as ResponseType } from 'express';
 import { RefreshPayload } from './interfaces/refreshPayload.interface';
 import { UpdatePasswordDto } from './dto/updatePassword.dto';
 import { ForgotPasswordDto } from './dto/forgotPasword.dto';
-import { User } from '../user/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { GoogleGuard } from './guards/google.guard';
 import { JwtAccessAuthGuard } from './guards/jwt_access.guard';
 import { GoogleUser } from './interfaces/googleUser.interace';

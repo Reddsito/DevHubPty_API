@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request as RequestType } from 'express'
-import { UserService } from '../../user/user.service';
+import { UserService } from '../../users/user.service';
 import { JwtPayload } from '../interfaces/JwtPayload.interface';
 
 export const ACCESS_TOKEN = 'ACCESS_TOKEN'

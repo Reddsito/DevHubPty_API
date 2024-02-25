@@ -15,8 +15,10 @@ model Post {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String @unique
   authorId String
+  tags String[]
   state Status @default(PUBLISH)
   data Json
+  createdAt DateTime @default(now())
 }
 
 enum Status {

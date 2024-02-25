@@ -1,15 +1,17 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { ConfigService } from '@nestjs/config';
 import { PostRepository } from './post.repository';
 import { SearchParamsDto } from './dto/searchParam.dto';
+import { VotesRepository } from '../votes/votes.repository';
+import { VotesService } from '../votes/votes.service';
 
 @Injectable()
 export class PostService {
 
   constructor(
-    private readonly postRepository: PostRepository
+    private readonly postRepository: PostRepository,
+    private readonly votesService: VotesService
   ){}
 
   async create(createPostDto: CreatePostDto) {
@@ -21,16 +23,34 @@ export class PostService {
   }
 
   async findAll( searchParams: SearchParamsDto) {
-    return await this.postRepository.findAll({
-      orderBy: { 
-        ...searchParams.orderBy
-       },
+    const posts = await this.postRepository.findAll({
       page: searchParams.page,
-      where: {
-        ...searchParams.where
+      perPage: searchParams.limit,
+      where: searchParams.tag ? {
+        tags: {
+          has: searchParams.tag
+        }
+      } : {}
+    });
+
+    const postsIds = posts.data.map( post => post.id )
+    const votesCounts  = await this.votesService.getVotesCountsForPosts(postsIds)
+
+    const postsWithVotes = posts.data.map(post => {
+      return {
+        ...post,
+        votes: votesCounts[post.id] || 0
       }
     });
+
+    return {
+      data: postsWithVotes,
+      meta: posts.meta
+    };
+
   }
+
+  
 
   async findOne(id: string) {
     return this.postRepository.find({
