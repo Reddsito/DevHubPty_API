@@ -3,8 +3,8 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRepository } from './post.repository';
 import { SearchParamsDto } from './dto/searchParam.dto';
-import { VotesRepository } from '../votes/votes.repository';
 import { VotesService } from '../votes/votes.service';
+import { Status } from '@prisma-mongo/prisma/client';
 
 @Injectable()
 export class PostService {
@@ -28,7 +28,7 @@ export class PostService {
       perPage: searchParams.limit,
       where: searchParams.tag ? {
         tags: {
-          has: searchParams.tag
+          has: searchParams.tag,
         }
       } : {}
     });
@@ -48,6 +48,44 @@ export class PostService {
       meta: posts.meta
     };
 
+  }
+
+  async findAllArchivedPosts(searchParams: SearchParamsDto, postIds: string[]) {
+    const { page, limit, tag } = searchParams;
+
+    if (postIds.length <= 0) return []
+  
+    let whereClause = {
+      
+    };
+  
+    if (tag) {
+      whereClause = {
+        ...whereClause,
+        state: Status.PUBLISH,
+        tags: {
+          has: tag,
+        },
+      };
+    }
+  
+    if (postIds && postIds.length > 0) {
+      whereClause = {
+        ...whereClause,
+        state: Status.PUBLISH,
+        id: {
+          in: postIds,
+        },
+      };
+    }
+  
+    const posts = await this.postRepository.findAll({
+      page,
+      perPage: limit,
+      where: whereClause,
+    });
+  
+    return posts;
   }
 
   

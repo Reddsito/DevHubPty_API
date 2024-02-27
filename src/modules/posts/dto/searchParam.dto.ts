@@ -1,5 +1,16 @@
+import { IsOptional, IsString } from "class-validator"
+
 export class SearchParamsDto {
-  page: number
-  limit: number
-  tag: string
+
+  @IsString()
+  @IsOptional()
+  page?: number
+
+  @IsString()
+  @IsOptional()
+  limit?: number
+
+  @IsString()
+  @IsOptional()
+  tag?: string
 }

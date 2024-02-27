@@ -11,6 +11,7 @@ import { PostModule } from './modules/posts/post.module';
 import { VotesModule } from './modules/votes/votes.module';
 import { CommentVotesModule } from './modules/comment-votes/comment-votes.module';
 import { CommentsModule } from './modules/comments/comments.module';
+import { ArchivedPostsModule } from './modules/archived-posts/archived-posts.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { CommentsModule } from './modules/comments/comments.module';
     PostModule,
     VotesModule,
     CommentVotesModule,
-    CommentsModule
+    CommentsModule,
+    ArchivedPostsModule
   ],
   controllers: [],
   providers: [],
