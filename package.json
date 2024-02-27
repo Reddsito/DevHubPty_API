@@ -22,6 +22,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrate": "npx prisma migrate dev",
+    "prisma:init": "npx prisma generate && pnpm mongo:generate && npx prisma migrate dev && pnpm mongo:dbpush",
     "pg:studio": "npx prisma studio",
     "mongo:studio": "npx prisma studio --schema prisma-mongo/schema.prisma",
     "mongo:generate": "npx prisma generate --schema prisma-mongo/schema.prisma",
