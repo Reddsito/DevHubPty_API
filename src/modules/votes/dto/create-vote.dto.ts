@@ -4,8 +4,7 @@ export class CreateVoteDto {
 
   @IsString()
   @IsUUID()
-  @IsOptional()
-  userId?: string
+  userId: string
 
   @IsString()
   @IsMongoId()

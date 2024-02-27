@@ -14,6 +14,9 @@ import { VotesModule } from '../votes/votes.module';
     ConfigModule, 
     AuthModule, 
     DatabaseModule,
-    VotesModule]
+    VotesModule],
+    exports: [
+      PostService, PostRepository
+    ]
 })
 export class PostModule {}

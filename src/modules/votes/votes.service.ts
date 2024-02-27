@@ -2,12 +2,14 @@ import { ConflictException, Injectable, NotFoundException } from '@nestjs/common
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { UpdateVoteDto } from './dto/update-vote.dto';
 import { VotesRepository } from './votes.repository';
+import { UserService } from '../users/user.service';
 
 @Injectable()
 export class VotesService {
 
   constructor(
-    private readonly votesRepository: VotesRepository
+    private readonly votesRepository: VotesRepository,
+    private readonly userService: UserService
   )
   {}
 
@@ -15,9 +17,13 @@ export class VotesService {
 
     const vote = await this.find(createVoteDto.postId, createVoteDto.userId)
 
-    console.log(vote)
-
     if ( vote ) throw new ConflictException('This vote already exists')
+
+    const user = await this.userService.find({
+      id: createVoteDto.userId
+    })
+
+    if ( !user ) throw new NotFoundException(` Don't exist a user with this ID `)
 
     return await this.votesRepository.create({
       data: {
@@ -55,5 +61,9 @@ export class VotesService {
     });
 
     return result;
+  }
+
+  async getUserVotes() {
+    console.log('User votes')
   }
 }

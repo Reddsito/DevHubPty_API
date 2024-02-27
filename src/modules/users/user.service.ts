@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
@@ -70,6 +70,12 @@ export class UserService {
     })    
 
     if ( existingUsername ) throw new BadRequestException('There is already a user with this username')
+
+    const existingUser = await this.find({
+      id
+    })
+
+    if ( !existingUser ) throw new NotFoundException(` Don't exist a user with this ID `)
 
     const user = await this.userRepository.updateUser({
       data: updateUserDto,

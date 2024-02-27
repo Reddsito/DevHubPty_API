@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostRepository } from './post.repository';
@@ -61,6 +61,15 @@ export class PostService {
   }
 
   async update(id: string, updatePostDto: UpdatePostDto) {
+
+    const post = await this.postRepository.find({
+      where: {
+        id
+      }
+    })
+
+    if ( !post ) throw new NotFoundException(` Don't exist a post with this ID `)
+
     return this.postRepository.update({
       data: {
         ...updatePostDto
@@ -72,6 +81,14 @@ export class PostService {
   async remove(id: string, user: string) {
 
     if ( id !== user ) throw new ForbiddenException(`You don't have a permission to delete this user`)
+
+    const post = await this.postRepository.find({
+      where: {
+        id
+      }
+    })
+
+    if ( !post ) throw new NotFoundException(` Don't exist a post with this ID `)
 
     return this.postRepository.delete({
       id

@@ -9,6 +9,8 @@ import { EmailModule } from './modules/email/email.module';
 import { ConfigVariables } from '@/configuration/configuration';
 import { PostModule } from './modules/posts/post.module';
 import { VotesModule } from './modules/votes/votes.module';
+import { CommentVotesModule } from './modules/comment-votes/comment-votes.module';
+import { CommentsModule } from './modules/comments/comments.module';
 
 @Module({
   imports: [
@@ -22,7 +24,9 @@ import { VotesModule } from './modules/votes/votes.module';
     EmailModule,
     EventEmitterModule.forRoot(),
     PostModule,
-    VotesModule
+    VotesModule,
+    CommentVotesModule,
+    CommentsModule
   ],
   controllers: [],
   providers: [],

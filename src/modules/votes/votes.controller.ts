@@ -15,9 +15,7 @@ export class VotesController {
 
   @Post()
   create(
-    @Body() createVoteDto: CreateVoteDto,
-    @GetUser() user: User ) {
-      createVoteDto.userId = user.id
+    @Body() createVoteDto: CreateVoteDto) {
     return this.votesService.create(createVoteDto);
   }
 
@@ -26,5 +24,10 @@ export class VotesController {
     @Param('id', MongoIdValidationPipe) postId: string,
     @GetUser() user: User) {
     return this.votesService.remove(postId, user.id);
+  }
+
+  @Get(':id')
+  getUserVote() {
+    return this.votesService.getUserVotes()
   }
 }
