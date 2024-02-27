@@ -10,7 +10,7 @@ import { ConfigVariables } from '@/configuration/configuration';
 
 async function bootstrap() {
   const config = ConfigVariables();
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
 
   app.use(cookieParser());
 
